@@ -17,6 +17,7 @@ FIND_PACKAGE(PythonLibs)
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/sm/array_sm)
 
 #SET(CMAKE_SWIG_FLAGS "")
 #SET(CMAKE BUILD TYPE Debug)
@@ -68,6 +69,7 @@ SWIG_ADD_LIBRARY(xapp_sdk LANGUAGE ${XAPP_LANG} SOURCES
                                                  ../../sm/slice_sm/ie/slice_data_ie.c
                                                  ../../sm/tc_sm/ie/tc_data_ie.c
                                                  ../../sm/gtp_sm/ie/gtp_data_ie.c
+                                                 ../../sm/array_sm/array_sm_msg.c
                                                  ../../util/byte_array.c
                                                  ../../util/alg_ds/alg/eq_float.c
                                                  )

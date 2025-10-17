@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include "../../util/byte_array.h"
 
 #define MAX_ARRAY_ELEMS 256  // set higher than any expected Nr
 
@@ -17,6 +18,13 @@ typedef struct {
     float    the;         // AoA (rad)  — optional, keep if you use it
     float    R;           // range (m)  — optional, keep if you use it
 } array_ind_msg_t;
+
+typedef struct {
+  array_ind_msg_t msg;
+} array_ind_data_t;
+
+array_ind_msg_t array_dec_ind_msg(void const* enc, size_t len, const uint8_t* src);
+byte_array_t array_enc_ind_msg(void const* enc, const array_ind_msg_t* msg);
 
 /* ===== Control: RIC/xApp → Agent =====
    Your algorithm returns:
@@ -41,8 +49,12 @@ typedef struct {
 } array_sub_data_t;
 
 /* helpers */
-static inline void free_array_ind_msg(array_ind_msg_t* m)  { if (m) free(m); }
-static inline void free_array_ctrl_msg(array_ctrl_msg_t* m){ if (m) free(m); }
+void free_array_ind_msg(array_ind_msg_t* m);
+void free_array_ctrl_msg(array_ctrl_msg_t* m);
+void free_array_ctrl_out(array_ctrl_out_t* m);
+void free_array_sub_data(array_sub_data_t* m);
+void print_array_ind_msg(const array_ind_msg_t* m);
+void print_array_ctrl_msg(const array_ctrl_msg_t* m, uint32_t Nr);
 
 #endif /* ARRAY_SERVICE_MODEL_MSG_H */
 

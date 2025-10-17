@@ -27,7 +27,7 @@ on_indication_array_sm_ric(sm_ric_t const* sm_ric,
     memcpy(&ind, data->ind_msg,
            data->len_msg < sizeof(ind) ? data->len_msg : sizeof(ind));
 
-    rd_if.array = ind;
+    rd_if.array.msg = array_dec_ind_msg(NULL, data->len_msg, data->ind_msg);
 
     return rd_if;
 }

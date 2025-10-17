@@ -15,6 +15,7 @@
 #include "../../sm/pdcp_sm/ie/pdcp_data_ie.h"
 #include "../../sm/slice_sm/ie/slice_data_ie.h"
 #include "../../sm/gtp_sm/ie/gtp_data_ie.h"
+#include "../../sm/array_sm/array_sm_msg.h"
 
 //////////////////////////////////////
 // General    
@@ -162,6 +163,34 @@ struct gtp_cb {
 int report_gtp_sm(global_e2_node_id_t* id, Interval inter, gtp_cb* handler);
 
 void rm_report_gtp_sm(int);
+
+
+//////////////////////////////////////
+// Array SM   
+/////////////////////////////////////
+
+struct swig_array_ind_msg_t {
+    uint64_t tstamp_us;
+    uint32_t Nt;
+    uint32_t Nr;
+    float    snr_lin;
+    float    tht;
+    float    the;
+    float    R;
+};
+
+// Python callback interface
+struct array_cb {
+    virtual void handle(swig_array_ind_msg_t* a) = 0;
+    virtual ~array_cb() {}
+};
+
+// Subscribe / unsubscribe
+int report_array_sm(global_e2_node_id_t* id, Interval inter, array_cb* handler);
+void rm_report_array_sm(int);
+
+// Send control
+void control_array_sm(global_e2_node_id_t* id, array_ctrl_msg_t* ctrl);
 
 #endif
 

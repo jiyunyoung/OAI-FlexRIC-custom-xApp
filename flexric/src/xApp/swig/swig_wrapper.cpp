@@ -13,7 +13,8 @@
 #include "../../sm/gtp_sm/gtp_sm_id.h"
 #include "../../sm/slice_sm/slice_sm_id.h"
 #include "../../util/conf_file.h"
-
+#include "../../sm/array_sm/array_sm_msg.h"
+#include "../../sm/array_sm/array_sm_id.h"   // defines SM_ARRAY_ID
 
 #include <arpa/inet.h>
 #include <cassert>
@@ -520,3 +521,70 @@ void rm_report_gtp_sm(int handler)
 #endif
 
 }
+
+static array_cb* hndlr_array_cb;
+
+static
+void sm_cb_array(sm_ag_if_rd_t const* rd)
+{
+  assert(rd != NULL);
+  assert(rd->type == INDICATION_MSG_AGENT_IF_ANS_V0);
+  assert(rd->ind.type == ARRAY_STATS_V0);
+  assert(hndlr_array_cb != NULL);
+
+  array_ind_data_t const* data = &rd->ind.array;
+  swig_array_ind_msg_t ind;
+  ind.tstamp_us = data->msg.tstamp_us;
+  ind.Nt        = data->msg.Nt;
+  ind.Nr        = data->msg.Nr;
+  ind.snr_lin   = data->msg.snr_lin;
+  ind.tht       = data->msg.tht;
+  ind.the       = data->msg.the;
+  ind.R         = data->msg.R;
+
+#ifdef XAPP_LANG_PYTHON
+  PyGILState_STATE gstate;
+  gstate = PyGILState_Ensure();
+#endif
+
+  hndlr_array_cb->handle(&ind);
+
+#ifdef XAPP_LANG_PYTHON
+  PyGILState_Release(gstate);
+#endif
+}
+
+int report_array_sm(global_e2_node_id_t* id, Interval inter_arg, array_cb* handler)
+{
+  assert(id != NULL);
+  assert(handler != NULL);
+  hndlr_array_cb = handler;
+
+  const char* period = convert_period(inter_arg);
+  sm_ans_xapp_t ans = report_sm_xapp_api(id, SM_ARRAY_ID, (void*)period, sm_cb_array);
+  assert(ans.success == true);
+  return ans.u.handle;
+}
+
+void rm_report_array_sm(int handler)
+{
+#ifdef XAPP_LANG_PYTHON
+  PyGILState_STATE gstate;
+  gstate = PyGILState_Ensure();
+#endif
+
+  rm_report_sm_xapp_api(handler);
+
+#ifdef XAPP_LANG_PYTHON
+  PyGILState_Release(gstate);
+#endif
+}
+
+void control_array_sm(global_e2_node_id_t* id, array_ctrl_msg_t* ctrl)
+{
+  assert(id != NULL);
+  assert(ctrl != NULL);
+  printf("[array_sm] control: dt=%f, sel_idx[0]=%u\n", ctrl->dt, ctrl->sel_idx[0]);
+  control_sm_xapp_api(id, SM_ARRAY_ID, (void*)ctrl);
+}
+

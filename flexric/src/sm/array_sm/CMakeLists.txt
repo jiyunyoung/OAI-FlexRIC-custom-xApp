@@ -5,7 +5,7 @@ project(array_sm)
 set(ARRAY_SM_SRC
     array_sm_agent.c
     array_sm_ric.c
-    ../../util/byte_array.c         # required utility
+    array_sm_msg.c
 )
 
 # === Shared library (.so) ===

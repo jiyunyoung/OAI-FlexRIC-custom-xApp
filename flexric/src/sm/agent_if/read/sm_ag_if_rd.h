@@ -82,7 +82,7 @@ typedef struct{
     gtp_ind_data_t gtp;
     kpm_rd_ind_data_t kpm;
     rc_rd_ind_data_t rc;
-    array_ind_msg_t array;
+    array_ind_data_t array;
   };
 } sm_ag_if_rd_ind_t;
 
