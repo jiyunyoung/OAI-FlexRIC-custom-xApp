@@ -4,18 +4,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define MAX_ARRAY_ELEMS 256  // set higher than any expected Nr
-
+#define MAX_ARRAY_ELEMS 256  
 /* ===== Indication: Agent → RIC =====
    Carries the array/system state your xApp needs to compute control. */
 typedef struct {
-    uint64_t tstamp_us;   // microsecond timestamp
-    uint32_t Nt;          // # Tx elements (if relevant)
-    uint32_t Nr;          // # Rx elements (selection size will equal this)
-    float    snr_lin;     // example telemetry; keep what you need
-    float    tht;         // AoD (rad)  — optional, keep if you use it
-    float    the;         // AoA (rad)  — optional, keep if you use it
-    float    R;           // range (m)  — optional, keep if you use it
+    uint64_t tstamp_us;   // microsecond timestamp (when xApp computed control)
+    uint32_t Nt;         
+    uint32_t Nr;         
+    float    snr_lin;     
+    float    tht;         
+    float    the;         
+    float    R;           
 } array_ind_msg_t;
 
 /* ===== Control: RIC/xApp → Agent =====
@@ -25,8 +24,8 @@ typedef struct {
               because it MUST equal Nr — the agent will take the first Nr entries). */
 typedef struct {
     uint64_t tstamp_us;   // microsecond timestamp (when xApp computed control)
-    float    dt;          // optimized Tx spacing (m) — no 'dr' here
-    uint32_t sel_idx[MAX_ARRAY_ELEMS];  // use first Nr entries; no num_sel field
+    float    dt;          
+    uint32_t sel_idx[MAX_ARRAY_ELEMS];  
 } array_ctrl_msg_t;
 
 /* ===== Optional confirmation after applying control (Agent → RIC) */
