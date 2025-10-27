@@ -18,10 +18,7 @@ typedef struct {
 } array_ind_msg_t;
 
 /* ===== Control: RIC/xApp → Agent =====
-   Your algorithm returns:
-   - dt: the Tx spacing (or other single scalar you optimize),
-   - sel_idx: the EXACT set of Nr indices to activate on Rx (num_sel is omitted
-              because it MUST equal Nr — the agent will take the first Nr entries). */
+   Your algorithm returns. */
 typedef struct {
     uint64_t tstamp_us;   // microsecond timestamp (when xApp computed control)
     float    dt;          
